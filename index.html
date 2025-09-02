@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바다 탐구 학습지 - 왜일까?</title>
+    <style>
+        /* 기본 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nanum Gothic', '맑은 고딕', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        /* A4 용지 설정 */
+        .worksheet {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* 헤더 디자인 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* 정보 입력란 */
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .info-section input {
+            border: none;
+            border-bottom: 2px solid #333;
+            background: transparent;
+            padding: 5px;
+            font-size: 16px;
+            width: 150px;
+        }
+
+        /* 단계별 섹션 */
+        .step-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* STEP 1: 관찰 - 수정된 부분 */
+        .observation-section {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .observation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .observation-box {
+            background: white;
+            border: 2px dashed #90caf9;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .observation-box.example {
+            border-style: solid;
+            background: #f3f9ff;
+        }
+
+        .observation-drawing {
+            width: 100%;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: white;
+        }
+
+        .observation-drawing.empty {
+            border: 2px dashed #ccc;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .observation-label {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #2196f3;
+            text-align: center;
+            padding: 5px;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .observation-label.readonly {
+            border-bottom-color: #1976d2;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        /* STEP 2: 문제 발견 */
+        .problem-section {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .problem-card {
+            padding: 20px;
+            background: white;
+            border: 2px solid #ffb74d;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            background: #fff8e1;
+            transform: translateY(-2px);
+        }
+
+        .problem-card input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .problem-card label {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .problem-card .icon {
+            font-size: 30px;
+            margin-right: 15px;
+        }
+
+        /* STEP 3: 왜? 탐구 (핵심!) */
+        .why-section {
+            background: #fce4ec;
+            border-color: #e91e63;
+            border-width: 4px;
+        }
+
+        .why-levels {
+            margin: 20px 0;
+        }
+
+        .why-level {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #e91e63;
+        }
+
+        .why-level h3 {
+            color: #c2185b;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .why-level h3 .level-badge {
+            background: #e91e63;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .answer-option {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-option:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .answer-option input[type="radio"] {
+            display: none;
+        }
+
+        .answer-option.selected {
+            background: #fce4ec;
+            border-color: #e91e63;
+        }
+
+        .answer-option .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .answer-option .text {
+            font-size: 14px;
+        }
+
+        /* 그림 영역 */
+        .drawing-box {
+            width: 100%;
+            height: 150px;
+            border: 3px dashed #999;
+            border-radius: 10px;
+            background: white;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .drawing-box::before {
+            content: "✏️ 그림으로 설명하기";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ccc;
+            font-size: 16px;
+        }
+
+        /* 말하기 영역 */
+        .speaking-box {
+            padding: 15px;
+            background: #f0f4c3;
+            border: 2px solid #9ccc65;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .speaking-box h4 {
+            color: #689f38;
+            margin-bottom: 10px;
+        }
+
+        .speaking-box input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #9ccc65;
+            background: transparent;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        /* 최종 정리 */
+        .summary-section {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            margin-top: 30px;
+        }
+
+        .discovery-box {
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .discovery-box h3 {
+            color: #2e7d32;
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .discovery-statement {
+            font-size: 18px;
+            line-height: 2.5;
+            text-align: center;
+        }
+
+        .discovery-statement input {
+            border: none;
+            border-bottom: 3px solid #4caf50;
+            padding: 5px 10px;
+            font-size: 18px;
+            width: 250px;
+            text-align: center;
+        }
+
+        /* 버튼 스타일 */
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-print {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #5a6268;
+        }
+
+        /* 인쇄 스타일 - placeholder 제거 추가 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .worksheet {
+                box-shadow: none;
+                padding: 10mm;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .header {
+                background: none;
+                border: 2px solid black;
+                color: black;
+            }
+
+            /* 인쇄 시 placeholder 텍스트 제거 */
+            input::-webkit-input-placeholder {
+                color: transparent !important;
+            }
+            
+            input::-moz-placeholder {
+                color: transparent !important;
+            }
+            
+            input:-ms-input-placeholder {
+                color: transparent !important;
+            }
+            
+            input::placeholder {
+                color: transparent !important;
+            }
+
+            .problem-card:hover,
+            .answer-option:hover {
+                transform: none;
+            }
+
+            .observation-drawing.empty::before {
+                content: "";
+            }
+        }
+
+        /* 예시 표시 */
+        .example-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #2196f3;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="worksheet">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🔍 바다 탐구 - 왜일까?</h1>
+            <p>관찰하고, 문제를 찾고, 원인을 탐구해봅시다!</p>
+        </div>
+
+        <!-- 정보 입력 -->
+        <div class="info-section">
+            <div>
+                <label>👤 탐정 이름: <input type="text" id="studentName" placeholder="이름"></label>
+            </div>
+            <div>
+                <label>📅 날짜: <input type="date" id="studyDate"></label>
+            </div>
+        </div>
+
+        <!-- STEP 1: 관찰 - 수정된 부분 -->
+        <div class="step-section observation-section">
+            <span class="step-number">STEP 1</span>
+            <h2 style="color: #1976d2; margin-bottom: 15px;">👁️ 무엇이 보이나요?</h2>
+            <p style="margin-bottom: 15px;">그림책을 보고 본 것을 그리고 이름을 써보세요</p>
+            
+            <div class="observation-grid">
+                <!-- 예시 (1개만) -->
+                <div class="observation-box example" style="position: relative;">
+                    <span class="example-badge">예시</span>
+                    <div class="observation-drawing">🐢</div>
+                    <input type="text" class="observation-label readonly" value="거북이" readonly>
+                </div>
+                
+                <!-- 빈 칸 1 -->
+                <div class="observation-box">
+                    <div class="observation-drawing empty">그림 그리기</div>
+                    <input type="text" class="observation-label" placeholder="이름 쓰기">
+                </div>
+                
+                <!-- 빈 칸 2 -->
+                <div class="observation-box">
+                    <div class="observation-drawing empty">그림 그리기</div>
+                    <input type="text" class="observation-label" placeholder="이름 쓰기">
+                </div>
+                
+                <!-- 빈 칸 3 -->
+                <div class="observation-box">
+                    <div class="observation-drawing empty">그림 그리기</div>
+                    <input type="text" class="observation-label" placeholder="이름 쓰기">
+                </div>
+                
+                <!-- 빈 칸 4 -->
+                <div class="observation-box">
+                    <div class="observation-drawing empty">그림 그리기</div>
+                    <input type="text" class="observation-label" placeholder="이름 쓰기">
+                </div>
+                
+                <!-- 빈 칸 5 -->
+                <div class="observation-box">
+                    <div class="observation-drawing empty">그림 그리기</div>
+                    <input type="text" class="observation-label" placeholder="이름 쓰기">
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: 문제 발견 -->
+        <div class="step-section problem-section">
+            <span class="step-number">STEP 2</span>
+            <h2 style="color: #f57c00; margin-bottom: 15px;">🔍 어떤 문제가 생겼나요?</h2>
+            <p style="margin-bottom: 15px;">가장 큰 문제를 하나 선택하세요</p>
+            
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <label>
+                        <input type="radio" name="problem" value="eating">
+                        <span class="icon">🍴</span>
+                        <span>쓰레기를 먹어요</span>
+                    </label>
+                </div>
+                <div class="problem-card">
+                    <label>
+                        <input type="radio" name="problem" value="trapped">
+                        <span class="icon">🕸️</span>
+                        <span>쓰레기에 걸려요</span>
+                    </label>
+                </div>
+                <div class="problem-card">
+                    <label>
+                        <input type="radio" name="problem" value="hurt">
+                        <span class="icon">🤕</span>
+                        <span>다치고 아파요</span>
+                    </label>
+                </div>
+                <div class="problem-card">
+                    <label>
+                        <input type="radio" name="problem" value="dying">
+                        <span class="icon">😢</span>
+                        <span>죽기도 해요</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: 왜? 탐구 -->
+        <div class="step-section why-section">
+            <span class="step-number">STEP 3 - 핵심!</span>
+            <h2 style="color: #c2185b; margin-bottom: 20px; text-align: center; font-size: 28px;">
+                ❓❓❓ 왜? 왜? 왜?
+            </h2>
+            
+            <div class="why-levels">
+                <!-- 왜 1단계 -->
+                <div class="why-level">
+                    <h3><span class="level-badge">왜 1</span>거북이가 왜 비닐을 먹을까요?</h3>
+                    <div class="answer-options">
+                        <label class="answer-option">
+                            <input type="radio" name="why1" value="mistake">
+                            <div class="icon">🎭</div>
+                            <div class="text">해파리로 착각</div>
+                        </label>
+                        <label class="answer-option">
+                            <input type="radio" name="why1" value="hungry">
+                            <div class="icon">🍽️</div>
+                            <div class="text">배가 고파서</div>
+                        </label>
+                        <label class="answer-option">
+                            <input type="radio" name="why1" value="curious">
+                            <div class="icon">🤔</div>
+                            <div class="text">궁금해서</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 왜 2단계 -->
+                <div class="why-level">
+                    <h3><span class="level-badge">왜 2</span>비닐이 왜 바다에 있을까요?</h3>
+                    <div class="answer-options">
+                        <label class="answer-option">
+                            <input type="radio" name="why2" value="thrown">
+                            <div class="icon">🚮</div>
+                            <div class="text">사람이 버려서</div>
+                        </label>
+                        <label class="answer-option">
+                            <input type="radio" name="why2" value="wind">
+                            <div class="icon">💨</div>
+                            <div class="text">바람에 날려서</div>
+                        </label>
+                        <label class="answer-option">
+                            <input type="radio" name="why2" value="river">
+                            <div class="icon">🏞️</div>
+                            <div class="text">강에서 흘러와서</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 왜 3단계 -->
+                <div class="why-level">
+                    <h3><span class="level-badge">왜 3</span>사람들이 왜 쓰레기를 버릴까요?</h3>
+                    
+                    <!-- 선택형 답변 -->
+                    <div style="margin-bottom: 15px;">
+                        <input type="checkbox" id="lazy" style="width: 20px; height: 20px; margin-right: 10px;">
+                        <label for="lazy" style="font-size: 16px;">귀찮아서</label>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="checkbox" id="nobin" style="width: 20px; height: 20px; margin-right: 10px;">
+                        <label for="nobin" style="font-size: 16px;">쓰레기통이 없어서</label>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="checkbox" id="dontknow" style="width: 20px; height: 20px; margin-right: 10px;">
+                        <label for="dontknow" style="font-size: 16px;">나쁜 일인지 몰라서</label>
+                    </div>
+                    
+                    <!-- 그림으로 설명 -->
+                    <div class="drawing-box"></div>
+                    
+                    <!-- 말하기 옵션 -->
+                    <div class="speaking-box">
+                        <h4>🗣️ 친구에게 말하고 써달라고 하기</h4>
+                        <input type="text" placeholder="친구가 대신 써줘요">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 최종 정리 -->
+        <div class="step-section summary-section">
+            <span class="step-number">정리</span>
+            <div class="discovery-box">
+                <h3>🌟 나의 발견</h3>
+                <div class="discovery-statement">
+                    바다 쓰레기 때문에<br>
+                    동물들이 <input type="text" placeholder="어떻게 되나요?"> 됩니다.<br><br>
+                    
+                    가장 큰 원인은<br>
+                    <input type="text" placeholder="무엇인가요?"> 입니다.<br><br>
+                    
+                    그래서 나는<br>
+                    <input type="text" placeholder="무엇을 하겠어요?"> 하겠습니다.
+                </div>
+            </div>
+        </div>
+
+        <!-- 버튼 -->
+        <div class="button-group">
+            <button class="btn btn-print" onclick="window.print()">🖨️ 인쇄하기</button>
+            <button class="btn btn-reset" onclick="resetWorksheet()">🔄 다시하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 오늘 날짜 자동 설정
+        document.getElementById('studyDate').valueAsDate = new Date();
+
+        // 문제 카드 선택
+        document.querySelectorAll('.problem-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.problem-card').forEach(c => {
+                    c.style.background = 'white';
+                });
+                this.style.background = '#fff8e1';
+            });
+        });
+
+        // 답변 옵션 선택
+        document.querySelectorAll('.answer-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const name = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+                    input.parentElement.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+            });
+        });
+
+        // 초기화 함수
+        function resetWorksheet() {
+            if(confirm('모든 내용을 지우고 다시 시작하시겠습니까?')) {
+                // 라디오 버튼 초기화
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                
+                // 체크박스 초기화
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // 텍스트 입력 초기화 (예시 제외)
+                document.querySelectorAll('input[type="text"]').forEach(input => {
+                    if(input.id !== 'studentName' && !input.classList.contains('readonly')) {
+                        input.value = '';
+                    }
+                });
+                
+                // 선택 스타일 초기화
+                document.querySelectorAll('.answer-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                document.querySelectorAll('.problem-card').forEach(card => {
+                    card.style.background = 'white';
+                });
+                
+                // 날짜는 오늘로 재설정
+                document.getElementById('studyDate').valueAsDate = new Date();
+            }
+        }
+
+        // 그림 그리기 영역 클릭 이벤트 (선택사항)
+        document.querySelectorAll('.observation-drawing.empty').forEach(box => {
+            box.addEventListener('click', function() {
+                alert('여기에 연필이나 크레파스로 그림을 그려주세요!');
+            });
+        });
+
+        // 인쇄 시 선택된 항목 강조
+        window.addEventListener('beforeprint', function() {
+            // 선택된 항목 강조
+            document.querySelectorAll('.selected').forEach(element => {
+                element.style.border = '3px solid black';
+            });
+            
+            // 그림 그리기 안내 텍스트 제거
+            document.querySelectorAll('.observation-drawing.empty').forEach(box => {
+                box.textContent = '';
+            });
+        });
+
+        window.addEventListener('afterprint', function() {
+            // 스타일 복원
+            document.querySelectorAll('.selected').forEach(element => {
+                element.style.border = '';
+            });
+            
+            // 그림 그리기 안내 텍스트 복원
+            document.querySelectorAll('.observation-drawing.empty').forEach(box => {
+                box.textContent = '그림 그리기';
+            });
+        });
+    </script>
+</body>
+</html>
